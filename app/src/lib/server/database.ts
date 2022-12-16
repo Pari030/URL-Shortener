@@ -1,32 +1,35 @@
-import getClient, { type AtlasClient, type AtlasClientConfig } from "mongodb-atlas-api-client";
+import { MongoClient, Collection } from "mongodb";
 
 class Database {
-    client: AtlasClient
-
-    constructor(options: AtlasClientConfig) {
-        this.client = getClient(options)
+    client: MongoClient
+    links: Collection
+    
+    constructor(uri: string) {
+        this.client = new MongoClient(uri)
+        this.client.connect()
+        this.links = this.client.db("UrlShortener").collection("links")
     }
 
-    async addLinkSlug(link: String) {
-        const r = await this.client.user.getAll({
-            "envelope": true,
-            "itemsPerPage": 10,
-            "pretty": true
-        });
+    close() {
+        this.client.close()
     }
 
-    async getLinkBySlug(slug: String) {
-
+    async addLinkSlug(link: string) {
+        await this.links.insertOne({link})
     }
 
-    async slugExists(slug: String): Promise<Boolean> {
-        return false;
+    async getLinkBySlug(slug: string) {
+        return await this.links.findOne({slug})
     }
+
+    async slugExists(slug: string): Promise<boolean> {
+        return await this.links.findOne({slug}) != null;
+    }
+
+    async remSlug(slug: string) {
+        return await this.links.findOneAndDelete({slug})
+    }
+
 }
 
-export const db = new Database({
-    "publicKey": "some public key",
-    "privateKey": "some private key",
-    "baseUrl": "https://cloud.mongodb.com/api/atlas/v1.0",
-    "projectId": "some project/group id"
-});
+export const db = new Database("mongodb+srv://pari:pari@cluster0.oigqapf.mongodb.net/?retryWrites=true&w=majority")
