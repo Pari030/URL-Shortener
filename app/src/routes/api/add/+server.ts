@@ -4,6 +4,7 @@ import type { RequestHandler } from './$types';
  
 export const POST: RequestHandler = async ({ request }) => {
   const { link } = await request.json()
-  const slug = await db.addLinkSlug(link)
+  // const slug = await db.addLinkSlug(link)
+  const slug = link;
   return json({slug})
 }
