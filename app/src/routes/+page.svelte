@@ -13,8 +13,8 @@
         })
         .then((response) => response.json())
         .then((data) => {
-            shortenedUrl = `http://127.0.0.1:5173/${data.slug}` 
-        });;
+            shortenedUrl = `http://127.0.0.1:5173/s/${data.slug}` 
+        })
     }
 </script>
 

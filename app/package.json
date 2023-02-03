@@ -35,6 +35,7 @@
 	"dependencies": {
 		"mongodb": "^4.12.1",
 		"mongodb-atlas-api-client": "^3.6.0",
-		"sass": "^1.56.1"
+		"sass": "^1.56.1",
+		"sqlite3": "^5.1.4"
 	}
 }
